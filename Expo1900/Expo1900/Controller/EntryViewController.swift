@@ -12,6 +12,7 @@ final class EntryViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         guard let entries = JSONDecoder.decode([Entry].self, from: "items") else { return nil }
+        
         self.entries = entries
         
         super.init(coder: coder)
@@ -26,7 +27,17 @@ final class EntryViewController: UIViewController {
         buildNavigationBar()
     }
     
-    private func buildNavigationBar() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let orientation = UIDevice.current.orientation.rawValue
+        
+        UIDevice.current.setValue(orientation, forKey: "orientation")
+    }
+}
+
+private extension EntryViewController {
+    func buildNavigationBar() {
         navigationController?.navigationBar.isHidden = false
         title = "한국의 출품작"
     }
@@ -60,6 +71,7 @@ extension EntryViewController: UITableViewDataSource {
             for: indexPath) as? EntryTableViewCell else { return UITableViewCell() }
         
         cell.buildCell(from: entries[indexPath.row])
+        
         return cell
     }
 }
